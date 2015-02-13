@@ -14,7 +14,7 @@ baseurl = "http://hayoo.fh-wedel.de/json?query="
     
 query :: BL.ByteString -> IO [BL.ByteString]
 query input = do
-  let req = parseUrl $ "http://www.google.com" -- BL.unpack (baseurl <> input) :: Maybe Request
+  let req = parseUrl $ BL.unpack (baseurl <> input) :: Maybe Request
   case req of
     Just a  -> withManager defaultManagerSettings (\man -> withResponse a man responseFunc)
       where
