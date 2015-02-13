@@ -6,7 +6,7 @@ import Data.List
 main :: IO ()
 main = do
   result <- query "Monad"
-  putStrLn $ show result
+  putStrLn $ show $ result
   return ()
   
     
