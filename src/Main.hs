@@ -1,26 +1,30 @@
 {-# LANGUAGE OverloadedStrings #-}
-import HayooBot.Query
 import HayooBot.Types
 import HayooBot.Msg
-import HayooBot.Connect (connectServer)
-import HayooBot.Config
+import HayooBot.Connect 
+import qualified HayooBot.Config as Config
 import Control.Monad
-
+import Control.Monad.Fix
+import Control.Concurrent
+import Network (withSocketsDo)
+import qualified Data.ByteString.Char8 as B
 main :: IO ()
-main = do
-  let conn = IrcConn { serverIP = serverip, serverPort = port, nickName = nickname, realName = realName, channelList = channels }
-  connHandle <- connectServer conn
-  forkIO $ monitorConn connHandle conn
-  fix $ \loop -> do
-         msg <- readMsg
-         mainLoop msg
-         loop
-  return ()
+main = withSocketsDo $ do
+         let conn = IrcConn { serverIP = Config.serverIP, serverPort = Config.port, nickName = Config.nickName, realName = Config.realName, channelList = Config.channels }
+         connHandle <- connectServer conn
+         _ <- forkIO $ monitorConn connHandle conn
+         _ <- fix $ \loop -> do
+                         msg <- readMsg
+                         mainLoop msg
+                         loop
+         return ()
     where
-      mainLoop :: IO ()
+      mainLoop :: B.ByteString -> IO ()
       mainLoop msg = do
          case processMsg msg of
-           Just a -> responseMsg a
+           Just a -> do
+             let msg = responseMsg a
+             return ()
            Nothing -> return ()
 
     

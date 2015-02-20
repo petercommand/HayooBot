@@ -23,7 +23,8 @@ executable HayooBot
                        http-client >=0.4.4,
                        bytestring >=0.10.4,
                        deepseq >=1.3.0,
-                       HTTP >=4000.2.3
+                       HTTP >=4000.2.3,
+                       network >=2.6.0.2
   ghc-options:         -Wall
   hs-source-dirs:      src
   default-language:    Haskell2010
